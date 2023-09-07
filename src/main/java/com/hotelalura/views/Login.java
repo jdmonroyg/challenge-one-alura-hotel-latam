@@ -1,5 +1,8 @@
 package com.hotelalura.views;
 
+import com.hotelalura.controller.UsuarioController;
+import com.hotelalura.models.Usuario;
+
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -34,6 +37,7 @@ public class Login extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	private UsuarioController usuarioController;
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -51,6 +55,7 @@ public class Login extends JFrame {
 	 * Create the frame.
 	 */
 	public Login() {
+		this.usuarioController= new UsuarioController();
 		setResizable(false);
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -236,18 +241,22 @@ public class Login extends JFrame {
 	}
 	
 	private void Login() {
-		 String Usuario= "admin";
-	     String Contraseña="admin";
 
-	        String contrase=new String (txtContrasena.getPassword());
+//		 String Usuario= "admin";
+//	     String Contraseña="admin";
 
-	        if(txtUsuario.getText().equals(Usuario) && contrase.equals(Contraseña)){
-	            MenuUsuario menu = new MenuUsuario();
-	            menu.setVisible(true);
-	            dispose();	 
-	        }else {
-	            JOptionPane.showMessageDialog(this, "Usuario o Contraseña no válidos");
-	        }
+		String usuario= txtUsuario.getText();
+		String contrasena=new String (txtContrasena.getPassword());
+
+
+
+		if(this.usuarioController.consultar(new Usuario(usuario,contrasena))){
+			MenuUsuario menu = new MenuUsuario();
+			menu.setVisible(true);
+			dispose();
+		}else {
+			JOptionPane.showMessageDialog(this, "Usuario o Contraseña no válidos");
+		}
 	} 
 	 private void headerMousePressed(MouseEvent evt) {
 	        xMouse = evt.getX();

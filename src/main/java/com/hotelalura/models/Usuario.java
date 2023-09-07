@@ -12,4 +12,20 @@ public class Usuario {
         this.usuario = usuario;
         this.clave = clave;
     }
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public String getClave() {
+        return clave;
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "usuario='" + usuario + '\'' +
+                ", clave='" + clave + '\'' +
+                '}';
+    }
 }
