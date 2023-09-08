@@ -22,6 +22,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.Objects;
 
+import static com.hotelalura.controller.SalidaController.confirmarSalida;
+
 public class Login extends JFrame {
 
 	/**
@@ -90,7 +92,7 @@ public class Login extends JFrame {
 		btnexit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.exit(0);
+				confirmarSalida();
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -242,13 +244,8 @@ public class Login extends JFrame {
 	
 	private void Login() {
 
-//		 String Usuario= "admin";
-//	     String Contraseña="admin";
-
 		String usuario= txtUsuario.getText();
 		String contrasena=new String (txtContrasena.getPassword());
-
-
 
 		if(this.usuarioController.consultar(new Usuario(usuario,contrasena))){
 			MenuUsuario menu = new MenuUsuario();

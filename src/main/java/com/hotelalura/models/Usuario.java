@@ -21,11 +21,4 @@ public class Usuario {
         return clave;
     }
 
-    @Override
-    public String toString() {
-        return "Usuario{" +
-                "usuario='" + usuario + '\'' +
-                ", clave='" + clave + '\'' +
-                '}';
-    }
 }

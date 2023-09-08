@@ -1,21 +1,20 @@
 package com.hotelalura.views;
 
+
 import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.Panel;
 import java.awt.Color;
 import java.awt.SystemColor;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
 import java.awt.Font;
 import java.awt.Toolkit;
-import javax.swing.SwingConstants;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.Objects;
+
+import static com.hotelalura.controller.SalidaController.confirmarSalida;
 
 @SuppressWarnings("serial")
 public class MenuPrincipal extends JFrame {
@@ -109,7 +108,7 @@ public class MenuPrincipal extends JFrame {
 		btnexit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.exit(0);
+				confirmarSalida();
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
