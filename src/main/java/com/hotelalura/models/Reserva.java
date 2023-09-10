@@ -13,20 +13,41 @@ public class Reserva {
     private double valor;
     private String formaPago;
 
-    public Reserva(Date fechaEntrada, Date fechaSalida, int valor, String formaPago) {
+    public Reserva(Date fechaEntrada, Date fechaSalida, double valor, String formaPago) {
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
         this.valor = valor;
         this.formaPago = formaPago;
     }
 
-    public Reserva(Integer id, Date fechaEntrada, Date fechaSalida, int valor, String formaPago) {
+    public Reserva(Integer id, Date fechaEntrada, Date fechaSalida, double valor, String formaPago) {
         this.id=id;
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
         this.valor = valor;
         this.formaPago = formaPago;
     }
+    public int getId() {
+        return id;
+    }
 
+    public Date getFechaEntrada() {
+        return fechaEntrada;
+    }
 
+    public Date getFechaSalida() {
+        return fechaSalida;
+    }
+
+    public double getValor() {
+        return valor;
+    }
+
+    public String getFormaPago() {
+        return formaPago;
+    }
+
+    public void setId(int id) {
+        this.id=id;
+    }
 }

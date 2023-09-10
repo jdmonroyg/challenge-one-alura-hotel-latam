@@ -11,7 +11,8 @@ import javax.swing.ImageIcon;
 import java.awt.Color;
 import javax.swing.JTextField;
 
-import com.hotelalura.controller.ReservasController;
+import com.hotelalura.controller.ReservaController;
+import com.hotelalura.models.Reserva;
 import com.toedter.calendar.JDateChooser;
 import java.awt.Font;
 import javax.swing.JComboBox;
@@ -20,9 +21,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.Toolkit;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Objects;
 import javax.swing.JSeparator;
@@ -42,7 +44,7 @@ public class ReservasView extends JFrame {
 	private JLabel labelExit;
 	private JLabel labelAtras;
 
-	private ReservasController reservasController;
+	private ReservaController reservasController;
 
 	/**
 	 * Launch the application.
@@ -64,7 +66,7 @@ public class ReservasView extends JFrame {
 	 * Create the frame.
 	 */
 	public ReservasView() {
-		this.reservasController=new ReservasController();
+		this.reservasController=new ReservaController();
 		//super("Reserva");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ReservasView.class.getResource("/imagenes/aH-40px.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -151,7 +153,7 @@ public class ReservasView extends JFrame {
 		
 		JLabel lblValor = new JLabel("VALOR DE LA RESERVA");
 		lblValor.setForeground(SystemColor.textInactiveText);
-		lblValor.setBounds(72, 303, 196, 14);
+		lblValor.setBounds(72, 303, 250, 14);
 		lblValor.setFont(new Font("Roboto Black", Font.PLAIN, 18));
 		panel.add(lblValor);
 		
@@ -248,7 +250,7 @@ public class ReservasView extends JFrame {
 		lblSiguiente.setFont(new Font("Roboto", Font.PLAIN, 18));
 		lblSiguiente.setBounds(0, 0, 122, 35);
 
-		Date fechaActual = new java.util.Date(); // campo para setear la fecha min
+		Date fechaActual = new Date(); // campo para setear la fecha min
 
 		//Campos que guardaremos en la base de datos
 		txtFechaEntrada = new JDateChooser();
@@ -277,10 +279,9 @@ public class ReservasView extends JFrame {
 		txtFechaSalida.setFont(new Font("Roboto", Font.PLAIN, 18));
 		// setear fecha minima con respecto a la fecha actual
 		txtFechaSalida.setMinSelectableDate(fechaActual);
-		txtFechaSalida.addPropertyChangeListener(new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				//Activa el evento, después del usuario seleccionar las fechas se debe calcular el valor de la reserva
-			}
+		txtFechaSalida.addPropertyChangeListener(evt -> {
+			//Activa el evento, después del usuario seleccionar las fechas se debe calcular el valor de la reserva
+			calcularValorReserva(txtFechaEntrada,txtFechaSalida);
 		});
 		panel.add(txtFechaSalida);
 
@@ -302,7 +303,10 @@ public class ReservasView extends JFrame {
 		txtFormaPago.setFont(new Font("Roboto", Font.PLAIN, 16));
 		txtFormaPago.setModel(new DefaultComboBoxModel(new String[] {"Tarjeta de Crédito", "Tarjeta de Débito", "Dinero en efectivo"}));
 		panel.add(txtFormaPago);
+		//Variables para utilizar en los listener
 		SimpleDateFormat fechaFormato = new SimpleDateFormat("yyyy-MM-dd");
+
+
 		JPanel btnsiguiente = new JPanel();
 		btnsiguiente.addMouseListener(new MouseAdapter() {
 			@Override
@@ -313,9 +317,7 @@ public class ReservasView extends JFrame {
 						fechaSalida != null  &&
 						!fechaFormato.format(fechaEntrada).equals(fechaFormato.format(fechaSalida)) &&
 						fechaEntrada.before(fechaSalida)) {
-					RegistroHuesped registro = new RegistroHuesped();
-					registro.setVisible(true);
-					dispose();
+					guardarReserva();
 				} else {
 					JOptionPane.showMessageDialog(null, "Completa todos los campos y asegura que la fecha check in sea anterior a check out.");
 				}
@@ -328,6 +330,26 @@ public class ReservasView extends JFrame {
 		btnsiguiente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 		btnsiguiente.add(lblSiguiente);
 
+	}
+	public void calcularValorReserva(JDateChooser txtFechaEntrada, JDateChooser txtFechaSalida){
+		if(txtFechaEntrada.getDate() != null && txtFechaSalida.getDate() !=null) {
+			LocalDate fechaEntrada=txtFechaEntrada.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			LocalDate fechaSalida=txtFechaSalida.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			txtValor.setText(String.valueOf(15*ChronoUnit.DAYS.between(fechaEntrada, fechaSalida)));
+		}
+	}
+
+	private void guardarReserva() {
+		String fechaE = ((JTextField)txtFechaEntrada.getDateEditor().getUiComponent()).getText();
+		String fechaS = ((JTextField)txtFechaSalida.getDateEditor().getUiComponent()).getText();
+		Reserva nuevaReserva = new Reserva(java.sql.Date.valueOf(fechaE), java.sql.Date.valueOf(fechaS),Double.parseDouble(txtValor.getText()), Objects.requireNonNull(txtFormaPago.getSelectedItem()).toString());
+		reservasController.guardar(nuevaReserva);
+
+		JOptionPane.showMessageDialog(null,"Registro Guardado con éxito, id: " + nuevaReserva.getId());
+
+		RegistroHuesped registro = new RegistroHuesped(nuevaReserva.getId());
+		registro.setVisible(true);
+		dispose();
 	}
 		
 	//Código que permite mover la ventana por la pantalla según la posición de "x" y "y"	
