@@ -2,6 +2,8 @@ package com.hotelalura.views;
 
 import com.hotelalura.controller.HuespedController;
 import com.hotelalura.controller.ReservaController;
+import com.hotelalura.models.Huesped;
+import com.hotelalura.models.Reserva;
 
 import java.awt.EventQueue;
 import javax.swing.*;
@@ -13,6 +15,7 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.List;
 import java.util.Objects;
 
 import static com.hotelalura.utility.UtilidadesValidacion.validarNumero;
@@ -220,9 +223,8 @@ public class Busqueda extends JFrame {
 						cargarTablaReservasId();
 					}
 					else {
-						//agregar busqueda por apellido
+						buscarNombreOrApellido(textoBuscado);
 					}
-
 				}else {
 					cargarTablaHuespedes();
 					cargarTablaReservas();
@@ -319,6 +321,35 @@ public class Busqueda extends JFrame {
 						huesped.getIdReserva()
 				})
 		);
+	}
+
+	public void buscarNombreOrApellido(String searchText) {
+		System.out.println("aca");
+		List<Object> resultados = this.huespedController.buscarbuscarNombreOrApellido(searchText);
+
+		resultados.forEach(resultado -> {
+			if (resultado instanceof Huesped) {
+				Huesped huesped = (Huesped) resultado;
+				modeloHuesped.addRow(new Object[]{
+						huesped.getId(),
+						huesped.getNombre(),
+						huesped.getApellido(),
+						huesped.getFechaNacimiento(),
+						huesped.getNacionalidad(),
+						huesped.getTelefono(),
+						huesped.getIdReserva()
+				});
+			} else if (resultado instanceof Reserva) {
+				Reserva reserva = (Reserva) resultado;
+				modeloReserva.addRow(new Object[]{
+						reserva.getId(),
+						reserva.getFechaEntrada(),
+						reserva.getFechaSalida(),
+						reserva.getValor(),
+						reserva.getFormaPago()
+				});
+			}
+		});
 	}
 
 	private void limpiarTabla() {

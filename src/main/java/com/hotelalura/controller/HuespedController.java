@@ -21,4 +21,8 @@ public class HuespedController {
     public List<Huesped> buscarId(String id){
         return new HuespedDAO().buscarId(id);
     }
+
+    public List<Object> buscarbuscarNombreOrApellido(String nombreOrApellido){
+        return new HuespedDAO().buscarbuscarNombreOrApellido(nombreOrApellido);
+    }
 }

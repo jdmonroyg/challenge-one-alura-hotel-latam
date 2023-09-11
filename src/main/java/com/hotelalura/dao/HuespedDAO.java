@@ -7,6 +7,7 @@ import com.hotelalura.models.Reserva;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author jdmon on 9/09/2023.
@@ -69,6 +70,41 @@ public class HuespedDAO {
             throw new RuntimeException(sqlException);
         }
         return huespedList;
+    }
+
+    public List<Object> buscarbuscarNombreOrApellido(String nombreOrApellido){
+
+        String query="select * from reservas r inner join huespedes h on r.id =h.idreserva " +
+                " where h.nombre=? or h.apellido=?";
+        List <Object> resultados= new ArrayList<>();
+        try(con;
+            PreparedStatement pstm = con.prepareStatement(query)) {
+            pstm.setString(1,nombreOrApellido);
+            pstm.setString(2,nombreOrApellido);
+            try (ResultSet rs = pstm.executeQuery()){
+                while (rs.next()){
+                    Reserva reserva=new Reserva(rs.getInt("r.id"),
+                            rs.getDate("r.fechaEntrada"),
+                            rs.getDate("r.fechaSalida"),
+                            rs.getDouble("r.valor"),
+                            rs.getString("r.formaPago")
+                    );
+                    resultados.add(reserva);
+                    Huesped huesped= new Huesped(rs.getInt("h.idHuespedes"),
+                            rs.getString("h.nombre"),
+                            rs.getString("h.apellido"),
+                            rs.getDate("h.fechaNacimiento"),
+                            rs.getString("h.nacionalidad"),
+                            rs.getString("h.telefono"),
+                            rs.getInt("h.idReserva"));
+                    resultados.add(huesped);
+                }
+            }
+
+        }catch (SQLException sqlException){
+            throw new RuntimeException(sqlException);
+        }
+        return resultados;
     }
 
     private static void agregarHuespedList(List<Huesped> huespedList, PreparedStatement preparedStatement) throws SQLException {

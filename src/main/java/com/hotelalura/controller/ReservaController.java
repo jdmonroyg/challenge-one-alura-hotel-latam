@@ -3,6 +3,7 @@ package com.hotelalura.controller;
 import com.hotelalura.dao.ReservaDAO;
 import com.hotelalura.models.Reserva;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,4 +21,5 @@ public class ReservaController {
     public List<Reserva> buscarId(String id) {
         return new ReservaDAO().buscarId(id);
     }
+
 }
