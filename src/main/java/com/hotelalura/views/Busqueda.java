@@ -183,8 +183,8 @@ public class Busqueda extends JFrame {
 		btnexit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				MenuUsuario usuario = new MenuUsuario();
-				usuario.setVisible(true);
+				Login login = new Login();
+				login.setVisible(true);
 				dispose();
 			}
 			@Override

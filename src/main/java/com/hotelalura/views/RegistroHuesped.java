@@ -20,6 +20,9 @@ import java.awt.Toolkit;
 import java.util.Date;
 import java.util.Objects;
 
+import static com.hotelalura.utility.UtilidadesValidacion.validarNombreOApellido;
+import static com.hotelalura.utility.UtilidadesValidacion.validarTelefono;
+
 @SuppressWarnings("serial")
 public class RegistroHuesped extends JFrame {
 
@@ -326,13 +329,19 @@ public class RegistroHuesped extends JFrame {
 
 	private void guardarHuesped() {
 		String fechaN = ((JTextField)txtFechaN.getDateEditor().getUiComponent()).getText();
-		Huesped huesped = new Huesped(txtNombre.getText(),txtApellido.getText(),
-				java.sql.Date.valueOf(fechaN), Objects.requireNonNull(txtNacionalidad.getSelectedItem()).toString(),txtTelefono.getText(),Integer.parseInt(txtNreserva.getText()));
-		this.huespedController.guardar(huesped);
-		Exito exito = new Exito();
-		exito.setVisible(true);
-		dispose();
-		JOptionPane.showMessageDialog(null,"Registro Guardado con éxito, id: " + huesped.getId() );
+		String apellido = txtApellido.getText();
+		String nombre=txtNombre.getText();
+		String telefono = txtTelefono.getText();
+		if (validarNombreOApellido(nombre) && validarNombreOApellido(apellido) &&
+				validarTelefono(telefono)){
+			Huesped huesped = new Huesped(nombre, apellido,
+					java.sql.Date.valueOf(fechaN), Objects.requireNonNull(txtNacionalidad.getSelectedItem()).toString(), telefono, Integer.parseInt(txtNreserva.getText()));
+			this.huespedController.guardar(huesped);
+			Exito exito = new Exito();
+			exito.setVisible(true);
+			dispose();
+			JOptionPane.showMessageDialog(null,"Registro Guardado con éxito, id: " + huesped.getId() );
+		}else JOptionPane.showMessageDialog(this, "Los campos 'Nombre' y 'Apellido' solo deben contener letras y el campo 'Teléfono' debe ser un numero valido de 10 digitos sin espacio");
 	}
 
 

@@ -24,4 +24,10 @@ public class UtilidadesValidacion {
         return cadena==null || cadena.isEmpty();
     }
 
+    public static boolean validarNombreOApellido(String cadena){
+        return cadena.matches("[a-zA-Zá-úÁ-Ú ]{3,20}");
+    }
+    public static boolean validarTelefono(String telefono) {
+        return telefono.matches("[36]\\d{9}");
+    }
 }
