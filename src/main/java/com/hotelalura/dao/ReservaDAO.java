@@ -77,4 +77,32 @@ public class ReservaDAO {
             }
         }
     }
+
+    public void modificar(Reserva reserva) {
+        String query= "update reservas " +
+                "set fechaEntrada=?, fechaSalida=?, valor=?, formaPago=?" +
+                "where id=?";
+        try(con;
+            PreparedStatement pstm = con.prepareStatement(query)) {
+            pstm.setDate(1,reserva.getFechaEntrada());
+            pstm.setDate(2,reserva.getFechaSalida());
+            pstm.setDouble(3,reserva.getValor());
+            pstm.setString(4,reserva.getFormaPago());
+            pstm.setInt(5,reserva.getId());
+            pstm.executeUpdate();
+
+        }catch (SQLException sqlException){
+            throw new RuntimeException(sqlException);
+        }
+    }
+    public void eliminar (int id){
+        String query="delete from reservas where id =? ";
+        try (con;
+             PreparedStatement pstm = con.prepareStatement(query)){
+            pstm.setInt(1,id);
+            pstm.execute();
+        }catch (SQLException sqlException){
+            throw new RuntimeException(sqlException);
+        }
+    }
 }

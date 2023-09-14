@@ -15,8 +15,13 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.hotelalura.utility.UtilidadesValidacion.validarNumero;
 
@@ -257,6 +262,23 @@ public class Busqueda extends JFrame {
 		lblEditar.setFont(new Font("Roboto", Font.PLAIN, 18));
 		lblEditar.setBounds(0, 0, 122, 35);
 		btnEditar.add(lblEditar);
+
+		btnEditar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (tbHuespedes.getSelectedRow()>=0){
+					actualizarHuesped();
+					actualizarTabla();
+				}else if (tbReservas.getSelectedRow()>=0){
+					actualizarReserva();
+					actualizarTabla();
+				}
+				else {
+					JOptionPane.showMessageDialog(null,"Por favor, elije un item");
+				}
+
+			}
+		});
 		
 		JPanel btnEliminar = new JPanel();
 		btnEliminar.setLayout(null);
@@ -272,7 +294,26 @@ public class Busqueda extends JFrame {
 		lblEliminar.setBounds(0, 0, 122, 35);
 		btnEliminar.add(lblEliminar);
 		setResizable(false);
+
+		btnEliminar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (tbHuespedes.getSelectedRow()>=0){
+					eliminarHuesped();
+					actualizarTabla();
+				}else if (tbReservas.getSelectedRow()>=0){
+					eliminarReserva();
+					actualizarTabla();
+				}
+				else {
+					JOptionPane.showMessageDialog(null,"Por favor, elije un item");
+				}
+			}
+		});
 	}
+
+
+
 
 	private void cargarTablaReservas(){
 		this.reservasController.listar().forEach(reserva ->
@@ -351,6 +392,68 @@ public class Busqueda extends JFrame {
 			}
 		});
 	}
+	private void actualizarHuesped(){
+		Optional.ofNullable(modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(),tbHuespedes.getSelectedColumn()))
+				.ifPresent(filaHuesped ->{
+					try{
+						int idHuesped=Integer.parseInt(modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(),0).toString());
+						String nombre=modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(),1).toString();
+						String apellido=modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(),2).toString();
+						Date fechaNacimiento=Date.valueOf(modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(),3).toString());
+						String nacionalidad=modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(),4).toString();
+						String telefono=modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(),5).toString();
+						int idReserva= Integer.parseInt(modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(),6).toString());
+						this.huespedController.modificar(new Huesped(idHuesped,nombre,apellido,fechaNacimiento,nacionalidad,telefono,idReserva));
+						JOptionPane.showMessageDialog(this, String.format("El id-%d fue modificado con exito!",idHuesped));
+					}
+					catch (Exception e){
+						JOptionPane.showMessageDialog(this, "Recuerde verificar los tipos de datos de los campos");
+					}
+				});
+	}
+	private void actualizarReserva() {
+		Optional.ofNullable(modeloReserva.getValueAt(tbReservas.getSelectedRow(),tbReservas.getSelectedColumn()))
+				.ifPresent(filaReserva ->{
+					try{
+						int idReserva=Integer.parseInt(modeloReserva.getValueAt(tbReservas.getSelectedRow(),0).toString());
+						Date fechaEntrada= Date.valueOf(modeloReserva.getValueAt(tbReservas.getSelectedRow(),1).toString());
+						Date fechaSalida= Date.valueOf(modeloReserva.getValueAt(tbReservas.getSelectedRow(),2).toString());
+						double valor= Double.parseDouble(modeloReserva.getValueAt(tbReservas.getSelectedRow(),3).toString());
+						String formaPago=modeloReserva.getValueAt(tbReservas.getSelectedRow(),4).toString();
+						this.reservasController.modificar(new Reserva(idReserva,fechaEntrada,fechaSalida,valor,formaPago));
+						JOptionPane.showMessageDialog(this, String.format("El id-%d fue modificado con exito!",idReserva));
+					}catch (Exception e){
+						JOptionPane.showMessageDialog(this, "Recuerde verificar los tipos de datos de los campos");
+					}
+
+				});
+	}
+
+	private void eliminarReserva(){
+		Optional.ofNullable( modeloReserva.getValueAt(tbReservas.getSelectedRow(),tbReservas.getSelectedColumn()))
+				.ifPresent(filaReserva -> {
+					int idReserva=Integer.parseInt(modeloReserva.getValueAt(tbReservas.getSelectedRow(),0).toString());
+					this.reservasController.eliminar(idReserva);
+					JOptionPane.showMessageDialog(this, String.format("El id-%d de reservas y el huesped asociado con exito!",idReserva));
+				});
+	}
+	private void eliminarHuesped(){
+		Optional.ofNullable( modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(),tbHuespedes.getSelectedColumn()))
+				.ifPresent(filaHuesped -> {
+					int idHuesped=Integer.parseInt(modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(),0).toString());
+					int idReserva=Integer.parseInt(modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(),6).toString());
+					// foreing key option, activado on delete cascade
+					this.reservasController.eliminar(idReserva);
+					JOptionPane.showMessageDialog(this, String.format("El id-%d de reserva y el id-%d de huesped fue eliminado con exito!",idHuesped, idReserva));
+				});
+	}
+
+	private void actualizarTabla() {
+		limpiarTabla();
+		cargarTablaHuespedes();
+		cargarTablaReservas();
+	}
+
 
 	private void limpiarTabla() {
 		((DefaultTableModel) tbHuespedes.getModel()).setRowCount(0);

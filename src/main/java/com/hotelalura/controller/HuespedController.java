@@ -1,9 +1,7 @@
 package com.hotelalura.controller;
 
 import com.hotelalura.dao.HuespedDAO;
-import com.hotelalura.dao.ReservaDAO;
 import com.hotelalura.models.Huesped;
-import com.hotelalura.models.Reserva;
 
 import java.util.List;
 
@@ -25,4 +23,10 @@ public class HuespedController {
     public List<Object> buscarbuscarNombreOrApellido(String nombreOrApellido){
         return new HuespedDAO().buscarbuscarNombreOrApellido(nombreOrApellido);
     }
+    public void modificar(Huesped huesped){
+        new HuespedDAO().modificar(huesped);
+    }
+    /*public void eliminar(int id){
+        new HuespedDAO().eliminar(id);
+    }*/
 }

@@ -22,4 +22,10 @@ public class ReservaController {
         return new ReservaDAO().buscarId(id);
     }
 
+    public void modificar(Reserva reserva) {
+        new ReservaDAO().modificar(reserva);
+    }
+    public void eliminar(int id){
+        new ReservaDAO().eliminar(id);
+    }
 }
