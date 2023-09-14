@@ -74,9 +74,9 @@ public class HuespedDAO {
     }
 
     public List<Object> buscarbuscarNombreOrApellido(String nombreOrApellido) {
-
+        nombreOrApellido="%"+nombreOrApellido.toLowerCase()+"%";
         String query = "select * from reservas r inner join huespedes h on r.id =h.idreserva " +
-                " where h.nombre=? or h.apellido=?";
+                " where LOWER(h.nombre) like ? or LOWER(h.apellido) like ?";
         List<Object> resultados = new ArrayList<>();
         try (con;
              PreparedStatement pstm = con.prepareStatement(query)) {

@@ -365,7 +365,6 @@ public class Busqueda extends JFrame {
 	}
 
 	public void buscarNombreOrApellido(String searchText) {
-		System.out.println("aca");
 		List<Object> resultados = this.huespedController.buscarbuscarNombreOrApellido(searchText);
 
 		resultados.forEach(resultado -> {

@@ -9,5 +9,8 @@
         <module name="HotelAlura" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="HotelAlura" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>
