@@ -31,6 +31,8 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
+import static com.hotelalura.controller.SalidaController.confirmarCerrarSesion;
+
 
 @SuppressWarnings("serial")
 public class ReservasView extends JFrame {
@@ -168,9 +170,11 @@ public class ReservasView extends JFrame {
 		btnexit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Login login = new Login();
-				login.setVisible(true);
-				dispose();
+				if (confirmarCerrarSesion()) {
+					Login login = new Login();
+					login.setVisible(true);
+					dispose();
+				}
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {

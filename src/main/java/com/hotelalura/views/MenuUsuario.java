@@ -18,7 +18,7 @@ import java.util.Date;
 import java.awt.SystemColor;
 import javax.swing.JSeparator;
 
-import static com.hotelalura.controller.SalidaController.confirmarSalida;
+import static com.hotelalura.controller.SalidaController.confirmarCerrarSesion;
 
 @SuppressWarnings("serial")
 public class MenuUsuario extends JFrame {
@@ -157,9 +157,11 @@ public class MenuUsuario extends JFrame {
 		btnexit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Login login = new Login();
-				login.setVisible(true);
-				dispose();
+				if (confirmarCerrarSesion()){
+					Login login = new Login();
+					login.setVisible(true);
+					dispose();
+				}
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {

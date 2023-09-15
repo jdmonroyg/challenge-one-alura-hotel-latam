@@ -16,13 +16,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.sql.Date;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.hotelalura.controller.SalidaController.confirmarCerrarSesion;
+import static com.hotelalura.controller.SalidaController.confirmarEliminarRegistro;
 import static com.hotelalura.utility.UtilidadesValidacion.validarNumero;
 
 @SuppressWarnings("serial")
@@ -183,9 +182,11 @@ public class Busqueda extends JFrame {
 		btnexit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Login login = new Login();
-				login.setVisible(true);
-				dispose();
+				if (confirmarCerrarSesion()) {
+					Login login = new Login();
+					login.setVisible(true);
+					dispose();
+				}
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) { //Al usuario pasar el mouse por el botón este cambiará de color
@@ -299,11 +300,15 @@ public class Busqueda extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (tbHuespedes.getSelectedRow()>=0){
-					eliminarHuesped();
-					actualizarTabla();
+					if (confirmarEliminarRegistro()){
+						eliminarHuesped();
+						actualizarTabla();
+					}
 				}else if (tbReservas.getSelectedRow()>=0){
-					eliminarReserva();
-					actualizarTabla();
+					if (confirmarEliminarRegistro()){
+						eliminarReserva();
+						actualizarTabla();
+					}
 				}
 				else {
 					JOptionPane.showMessageDialog(null,"Por favor, elije un item");

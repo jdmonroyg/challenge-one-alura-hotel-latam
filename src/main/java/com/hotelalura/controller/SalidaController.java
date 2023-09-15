@@ -13,4 +13,14 @@ public class SalidaController {
             System.exit(0);
         }
     }
+
+    public static boolean confirmarCerrarSesion(){
+        int response = JOptionPane.showConfirmDialog(null, "¿Quieres cerrar sesión?");
+        return response == 0;
+    }
+
+    public static boolean confirmarEliminarRegistro(){
+        int response = JOptionPane.showConfirmDialog(null, "¿Quieres eliminar el registro?");
+        return response == 0;
+    }
 }

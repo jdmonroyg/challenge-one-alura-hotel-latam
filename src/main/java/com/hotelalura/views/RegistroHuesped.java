@@ -6,7 +6,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 
 import com.hotelalura.controller.HuespedController;
-import com.hotelalura.controller.ReservaController;
 import com.hotelalura.models.Huesped;
 import com.toedter.calendar.JDateChooser;
 
@@ -337,10 +336,10 @@ public class RegistroHuesped extends JFrame {
 			Huesped huesped = new Huesped(nombre, apellido,
 					java.sql.Date.valueOf(fechaN), Objects.requireNonNull(txtNacionalidad.getSelectedItem()).toString(), telefono, Integer.parseInt(txtNreserva.getText()));
 			this.huespedController.guardar(huesped);
+			JOptionPane.showMessageDialog(null,"Registro Guardado con éxito, id: " + huesped.getId() );
 			Exito exito = new Exito();
 			exito.setVisible(true);
 			dispose();
-			JOptionPane.showMessageDialog(null,"Registro Guardado con éxito, id: " + huesped.getId() );
 		}else JOptionPane.showMessageDialog(this, "Los campos 'Nombre' y 'Apellido' solo deben contener letras y el campo 'Teléfono' debe ser un numero valido de 10 digitos sin espacio");
 	}
 
